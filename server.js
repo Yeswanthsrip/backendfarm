@@ -11,13 +11,19 @@ const animalRoutes = require('./routes/animalRoutes');
 const saleRoutes = require('./routes/saleRoutes');
 
 const app = express();
+
+// ✅ Middlewares
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/dairyDB')
-.then(() => console.log('DB Connected'))
-.catch(err => console.log(err));
+// ✅ MongoDB Atlas Connection (FINAL CORRECT)
+mongoose.connect(
+  'mongodb+srv://sriyeswanth9_db_user:UXenE9q1TYjtXvkc@cluster0.kmvscrp.mongodb.net/dairyDB'
+)
+.then(() => console.log('DB Connected ✅'))
+.catch(err => console.log('DB Error ❌', err));
 
+// ✅ Routes
 app.use('/milk', milkRoutes);
 app.use('/customer', customerRoutes);
 app.use('/delivery', deliveryRoutes);
@@ -26,5 +32,9 @@ app.use('/auth', authRoutes);
 app.use('/animal', animalRoutes);
 app.use('/sale', saleRoutes);
 
+// ✅ Render compatible port
+const PORT = process.env.PORT || 5000;
 
-app.listen(5000, () => console.log('Server running on port 5000'));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} 🚀`);
+});
