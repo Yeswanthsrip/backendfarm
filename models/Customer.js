@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
-  userId: String,   // ✅ ADD THIS
+  userId: String,
   name: String,
   phone: String,
   address: String,
