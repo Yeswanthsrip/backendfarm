@@ -99,15 +99,22 @@ router.post('/login', async (req, res) => {
     console.log("Customers:", customers);
 
     const customer = await Customer.findOne({
-      username: username.trim(),
-      password: password.trim()
+      username: username.trim()
     });
 
     console.log("Matched:", customer);
+    console.log("DB Password:", customer?.password);
+    console.log("Entered Password:", password);
 
     if (!customer) {
       return res.status(401).json({
-        message: "Invalid Username or Password ❌"
+        message: "Username not found"
+      });
+    }
+
+    if (customer.password !== password.trim()) {
+      return res.status(401).json({
+        message: "Password doesn't match"
       });
     }
 
