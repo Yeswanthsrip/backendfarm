@@ -91,19 +91,19 @@ router.post('/add', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    console.log("Request Body:", req.body);
+    const { username, password } = req.body;
+
+    console.log("Received:", username, password);
 
     const customers = await Customer.find();
-    console.log("All Customers:", customers);
-
-    const { username, password } = req.body;
+    console.log("Customers:", customers);
 
     const customer = await Customer.findOne({
       username: username.trim(),
       password: password.trim()
     });
 
-    console.log("Matched Customer:", customer);
+    console.log("Matched:", customer);
 
     if (!customer) {
       return res.status(401).json({
