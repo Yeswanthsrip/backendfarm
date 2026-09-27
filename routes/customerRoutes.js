@@ -59,15 +59,51 @@ router.post('/add', async (req, res) => {
 
 
 // ✅ CUSTOMER LOGIN
+// router.post('/login', async (req, res) => {
+//   try {
+
+//     const { username, password } = req.body;
+
+//     const customer = await Customer.findOne({
+//       username,
+//       password
+//     });
+
+//     if (!customer) {
+//       return res.status(401).json({
+//         message: "Invalid Username or Password ❌"
+//       });
+//     }
+
+//     res.json({
+//       message: "Login Success ✅",
+//       customer
+//     });
+
+//   } catch (err) {
+//     console.log(err);
+
+//     res.status(500).json({
+//       message: "Server Error ❌"
+//     });
+//   }
+// });
+
 router.post('/login', async (req, res) => {
   try {
+    console.log("Request Body:", req.body);
+
+    const customers = await Customer.find();
+    console.log("All Customers:", customers);
 
     const { username, password } = req.body;
 
     const customer = await Customer.findOne({
-      username,
-      password
+      username: username.trim(),
+      password: password.trim()
     });
+
+    console.log("Matched Customer:", customer);
 
     if (!customer) {
       return res.status(401).json({
@@ -82,7 +118,6 @@ router.post('/login', async (req, res) => {
 
   } catch (err) {
     console.log(err);
-
     res.status(500).json({
       message: "Server Error ❌"
     });
