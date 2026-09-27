@@ -91,20 +91,20 @@ router.post('/add', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
+    console.log("Body:", req.body);
+
     const { username, password } = req.body;
 
-    console.log("Received:", username, password);
-
+    // Show all usernames
     const customers = await Customer.find();
-    console.log("Customers:", customers);
+    console.log("Usernames:", customers.map(c => c.username));
 
+    // Find by username only
     const customer = await Customer.findOne({
       username: username.trim()
     });
 
-    console.log("Matched:", customer);
-    console.log("DB Password:", customer?.password);
-    console.log("Entered Password:", password);
+    console.log("Found:", customer);
 
     if (!customer) {
       return res.status(401).json({
@@ -112,9 +112,9 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    if (customer.password !== password.trim()) {
+    if (customer.password.trim() !== password.trim()) {
       return res.status(401).json({
-        message: "Password doesn't match"
+        message: "Password incorrect"
       });
     }
 
@@ -126,7 +126,7 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: "Server Error ❌"
+      message: "Server Error"
     });
   }
 });
