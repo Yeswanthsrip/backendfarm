@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Owner = require('../models/Owner');
+const Customer = require("../models/Customer");
 
 // 🔐 REGISTER
 router.post('/register', async (req, res) => {
@@ -54,6 +55,34 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: 'Server error ❌' });
+  }
+});
+
+//customer login
+
+router.post("/customer/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const customer = await Customer.findOne({
+      username,
+      password,
+    });
+
+    if (!customer) {
+      return res.status(401).json({
+        message: "Invalid Credentials",
+      });
+    }
+
+    res.json({
+      message: "Login Success",
+      customer,
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 

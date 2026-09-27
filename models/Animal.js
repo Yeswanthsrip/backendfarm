@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const animalSchema = new mongoose.Schema({
   userId: {
     type: String,
-    required: true   // 🔥 important (user-based data)
+    required: true 
   },
 
   type: {
     type: String,
-    required: true   // Cow / Buffalo
+    required: true 
   },
 
   name: {

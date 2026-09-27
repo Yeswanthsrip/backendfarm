@@ -12,7 +12,7 @@ const ownerSchema = new mongoose.Schema({
     required: true
   },
 
-  // 🔥 NEW FIELDS ADD CHEYYALI
+  // Adding new fields for owner details
   ownerName: {
     type: String,
     required: true

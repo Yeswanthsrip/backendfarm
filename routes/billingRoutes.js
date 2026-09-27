@@ -1,41 +1,109 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Delivery = require('../models/Delivery');
-const Bill = require('../models/Bill');
 
-// Get bill by customer
-router.get('/:customerId', async (req, res) => {
-  const bills = await Bill.find({ customerId: req.params.customerId });
-  res.json(bills);
+const Delivery = require("../models/Delivery");
+const Bill = require("../models/Bill");
+
+
+// ===============================
+// CUSTOMER MONTHLY BILL
+// ===============================
+router.get("/customer/:id/:month/:price", async (req, res) => {
+  try {
+    const { id, month, price } = req.params;
+
+    const deliveries = await Delivery.find({
+      customerId: id
+    });
+
+    const monthlyDeliveries = deliveries.filter((d) =>
+      d.date.startsWith(month)
+    );
+
+    const totalLitres = monthlyDeliveries.reduce(
+      (sum, d) => sum + d.litres,
+      0
+    );
+
+    const totalAmount = totalLitres * Number(price);
+
+    res.json({
+      totalLitres,
+      totalAmount
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server Error"
+    });
+  }
 });
 
-router.post('/generate', async (req, res) => {
-  const { customerId, pricePerLitre, month } = req.body;
 
-  // Filter deliveries by customer
-  const deliveries = await Delivery.find({ customerId });
+// ===============================
+// GET SAVED BILLS
+// ===============================
+router.get("/:customerId", async (req, res) => {
+  try {
+    const bills = await Bill.find({
+      customerId: req.params.customerId
+    });
 
-  let totalLitres = 0;
+    res.json(bills);
 
-  deliveries.forEach(d => {
-    // check if delivery date includes month
-    if (d.date.includes(month)) {
-      totalLitres += d.litres;
-    }
-  });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server Error"
+    });
+  }
+});
 
-  const totalAmount = totalLitres * pricePerLitre;
 
-  const bill = new Bill({
-    customerId,
-    month,
-    totalLitres,
-    totalAmount
-  });
+// ===============================
+// GENERATE BILL
+// ===============================
+router.post("/generate", async (req, res) => {
+  try {
 
-  await bill.save();
+    const {
+      customerId,
+      pricePerLitre,
+      month
+    } = req.body;
 
-  res.json(bill);
+    const deliveries = await Delivery.find({
+      customerId
+    });
+
+    let totalLitres = 0;
+
+    deliveries.forEach((d) => {
+      if (d.date.startsWith(month)) {
+        totalLitres += d.litres;
+      }
+    });
+
+    const totalAmount = totalLitres * Number(pricePerLitre);
+
+    const bill = new Bill({
+      customerId,
+      month,
+      totalLitres,
+      totalAmount
+    });
+
+    await bill.save();
+
+    res.json(bill);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Server Error"
+    });
+  }
 });
 
 module.exports = router;

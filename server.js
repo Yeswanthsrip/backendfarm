@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+require("dotenv").config();
+
 const milkRoutes = require('./routes/milkRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const deliveryRoutes = require('./routes/deliveryRoutes');
@@ -16,12 +18,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ MongoDB Atlas Connection (FINAL CORRECT)
-mongoose.connect(
-  'mongodb+srv://sriyeswanth9_db_user:UXenE9q1TYjtXvkc@cluster0.kmvscrp.mongodb.net/dairyDB'
-)
-.then(() => console.log('DB Connected ✅'))
-.catch(err => console.log('DB Error ❌', err));
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("DB Connected ✅"))
+  .catch(err => console.log("DB Error ❌", err));
+
 
 // ✅ Routes
 app.use('/milk', milkRoutes);

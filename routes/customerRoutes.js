@@ -7,7 +7,16 @@ const Customer = require('../models/Customer');
 router.post('/add', async (req, res) => {
   try {
 
-    const { userId, name, phone, address, apartment } = req.body;
+    const {
+      userId,
+      name,
+      phone,
+      address,
+      apartment,
+      username,
+      password,
+      dailyRequirement
+    } = req.body;
 
     // Duplicate phone check
     const existingCustomer = await Customer.findOne({
@@ -26,13 +35,48 @@ router.post('/add', async (req, res) => {
       name,
       phone,
       address,
-      apartment
+      apartment,
+      username,
+      password,
+      dailyRequirement
     });
 
     await customer.save();
 
     res.json({
       message: "Customer Added ✅",
+      customer
+    });
+
+  } catch (err) {
+    console.log(err);
+
+    res.status(500).json({
+      message: "Server Error ❌"
+    });
+  }
+});
+
+
+// ✅ CUSTOMER LOGIN
+router.post('/login', async (req, res) => {
+  try {
+
+    const { username, password } = req.body;
+
+    const customer = await Customer.findOne({
+      username,
+      password
+    });
+
+    if (!customer) {
+      return res.status(401).json({
+        message: "Invalid Username or Password ❌"
+      });
+    }
+
+    res.json({
+      message: "Login Success ✅",
       customer
     });
 
@@ -55,7 +99,10 @@ router.put('/update', async (req, res) => {
       name,
       phone,
       address,
-      apartment
+      apartment,
+      username,
+      password,
+      dailyRequirement
     } = req.body;
 
     const customer = await Customer.findOneAndUpdate(
@@ -66,7 +113,10 @@ router.put('/update', async (req, res) => {
       {
         name,
         address,
-        apartment
+        apartment,
+        username,
+        password,
+        dailyRequirement
       },
       {
         new: true
@@ -109,7 +159,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// DELETE CUSTOMER
+
+// ✅ DELETE CUSTOMER
 router.delete('/delete/:id', async (req, res) => {
   try {
 

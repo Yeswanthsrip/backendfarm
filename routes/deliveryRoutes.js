@@ -131,4 +131,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Customer Delivery History
+router.get("/customer/:id", async (req, res) => {
+  try {
+    const deliveries = await Delivery.find({
+      customerId: req.params.id
+    });
+
+    res.json(deliveries);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
 module.exports = router;
