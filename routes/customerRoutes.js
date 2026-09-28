@@ -89,22 +89,60 @@ router.post('/add', async (req, res) => {
 //   }
 // });
 
+// router.post('/login', async (req, res) => {
+//   try {
+//     console.log("Body:", req.body);
+
+//     const { username, password } = req.body;
+
+//     // Show all usernames
+//     const customers = await Customer.find();
+//     console.log("Usernames:", customers.map(c => c.username));
+
+//     // Find by username only
+//     const customer = await Customer.findOne({
+//       username: username.trim()
+//     });
+
+//     console.log("Found:", customer);
+
+//     if (!customer) {
+//       return res.status(401).json({
+//         message: "Username not found"
+//       });
+//     }
+
+//     if (customer.password.trim() !== password.trim()) {
+//       return res.status(401).json({
+//         message: "Password incorrect"
+//       });
+//     }
+
+//     res.json({
+//       message: "Login Success ✅",
+//       customer
+//     });
+
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({
+//       message: "Server Error"
+//     });
+//   }
+// });
+
 router.post('/login', async (req, res) => {
   try {
-    console.log("Body:", req.body);
-
     const { username, password } = req.body;
 
-    // Show all usernames
-    const customers = await Customer.find();
-    console.log("Usernames:", customers.map(c => c.username));
+    // 👇 Add this line
+    console.log("Collection Name:", Customer.collection.name);
 
-    // Find by username only
     const customer = await Customer.findOne({
       username: username.trim()
     });
 
-    console.log("Found:", customer);
+    console.log("Matched:", customer);
 
     if (!customer) {
       return res.status(401).json({
@@ -114,7 +152,7 @@ router.post('/login', async (req, res) => {
 
     if (customer.password.trim() !== password.trim()) {
       return res.status(401).json({
-        message: "Password incorrect"
+        message: "Password doesn't match"
       });
     }
 
