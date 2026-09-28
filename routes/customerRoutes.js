@@ -59,35 +59,35 @@ router.post('/add', async (req, res) => {
 
 
 // ✅ CUSTOMER LOGIN
-// router.post('/login', async (req, res) => {
-//   try {
+router.post('/login', async (req, res) => {
+  try {
 
-//     const { username, password } = req.body;
+    const { username, password } = req.body;
 
-//     const customer = await Customer.findOne({
-//       username,
-//       password
-//     });
+    const customer = await Customer.findOne({
+      username,
+      password
+    });
 
-//     if (!customer) {
-//       return res.status(401).json({
-//         message: "Invalid Username or Password ❌"
-//       });
-//     }
+    if (!customer) {
+      return res.status(401).json({
+        message: "Invalid Username or Password ❌"
+      });
+    }
 
-//     res.json({
-//       message: "Login Success ✅",
-//       customer
-//     });
+    res.json({
+      message: "Login Success ✅",
+      customer
+    });
 
-//   } catch (err) {
-//     console.log(err);
+  } catch (err) {
+    console.log(err);
 
-//     res.status(500).json({
-//       message: "Server Error ❌"
-//     });
-//   }
-// });
+    res.status(500).json({
+      message: "Server Error ❌"
+    });
+  }
+});
 
 // router.post('/login', async (req, res) => {
 //   try {
@@ -131,43 +131,43 @@ router.post('/add', async (req, res) => {
 //   }
 // });
 
-router.post('/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
+// router.post('/login', async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
 
-    // 👇 Add this line
-    console.log("Collection Name:", Customer.collection.name);
+//     // 👇 Add this line
+//     console.log("Collection Name:", Customer.collection.name);
 
-    const customer = await Customer.findOne({
-      username: username.trim()
-    });
+//     const customer = await Customer.findOne({
+//       username: username.trim()
+//     });
 
-    console.log("Matched:", customer);
+//     console.log("Matched:", customer);
 
-    if (!customer) {
-      return res.status(401).json({
-        message: "Username not found"
-      });
-    }
+//     if (!customer) {
+//       return res.status(401).json({
+//         message: "Username not found"
+//       });
+//     }
 
-    if (customer.password.trim() !== password.trim()) {
-      return res.status(401).json({
-        message: "Password doesn't match"
-      });
-    }
+//     if (customer.password.trim() !== password.trim()) {
+//       return res.status(401).json({
+//         message: "Password doesn't match"
+//       });
+//     }
 
-    res.json({
-      message: "Login Success ✅",
-      customer
-    });
+//     res.json({
+//       message: "Login Success ✅",
+//       customer
+//     });
 
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      message: "Server Error"
-    });
-  }
-});
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({
+//       message: "Server Error"
+//     });
+//   }
+// });
 
 
 // ✅ UPDATE CUSTOMER
